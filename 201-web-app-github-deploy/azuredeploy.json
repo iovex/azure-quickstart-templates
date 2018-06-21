@@ -47,18 +47,11 @@
         "description": "The instance size of the hosting plan (small, medium, or large)."
       }
     },
-    "repoURL": {
+    "packageUri": {
       "type": "string",
-      "defaultValue": "https://github.com/davidebbo-test/Mvc52Application.git",
+      "defaultValue": "https://github.com/Azure/appservice-zipped-templates/blob/master/NodeJs/Express.zip",
       "metadata": {
         "description": "The URL for the GitHub repository that contains the project to deploy."
-      }
-    },
-    "branch": {
-      "type": "string",
-      "defaultValue": "master",
-      "metadata": {
-        "description": "The branch of the GitHub repository to use."
       }
     }
   },
@@ -89,16 +82,23 @@
       },
       "resources": [
         {
+          "name": "MSDeploy",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
           "apiVersion": "2015-08-01",
-          "name": "web",
-          "type": "sourcecontrols",
           "dependsOn": [
             "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
           ],
+          "tags": {
+            "displayName": "SampleFunctionAppPackage"
+          },
           "properties": {
-            "RepoUrl": "[parameters('repoURL')]",
-            "branch": "[parameters('branch')]",
-            "IsManualIntegration": true
+            "packageUri": "parameters('packageUri')",
+            "dbType": "None",
+            "connectionString": "",
+            "setParameters": {
+              "IIS Web Application Name": "[variables('functionAppName')]"
+            }
           }
         }
       ]
